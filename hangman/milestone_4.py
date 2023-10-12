@@ -10,7 +10,7 @@ class Hangman:
         self.list_of_guesses = []
 
 
-    def check_guess(self, guess):
+    def check_guess(self, guess) -> None:
         guess = guess.lower()
         if guess in self.word:
             print(f"Good guess! {guess} is in the word.")
@@ -36,9 +36,9 @@ class Hangman:
                 self.list_of_guesses.append(guess)
         
 
-
-word_list_1 = ["plum", "apple", "banana", "mango", "nectarine"]
-game_test = Hangman(word_list_1)
-game_test.ask_for_input()
+if __name__ == '__main__':
+    word_list_1 = ["plum", "apple", "banana", "mango", "nectarine"]
+    game_test = Hangman(word_list_1)
+    game_test.ask_for_input()
 
     
