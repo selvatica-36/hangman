@@ -9,4 +9,24 @@ class Hangman:
         self.num_lives = num_lives
         self.list_of_guesses = []
 
+    def check_guess(guess):
+        guess = guess.lower()
+        if guess in word:
+            print(f"Good guess! {guess} is in the word.")
+        else:
+            print(f"Sorry, {guess} is not in the word. Try again.")
+
+    def ask_for_input():
+        while True:
+            guess = input("Please, guess a letter: ")
+            if len(guess) != 1 or guess.isalpha() == False:
+                print("Invalid letter. Please, enter a single alphabetical character.")
+            elif guess in self.list_of_guesses:
+                print("You already tried that letter!")
+            else:
+                check_guess(guess)
+                self.list_of_guesses = self.list_of_guesses.append(guess)
+        
+
+
     
