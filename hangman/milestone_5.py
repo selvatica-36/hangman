@@ -38,16 +38,17 @@ class Hangman:
 
 
 def play_game(word_list):
-    num_lives = 5
+    # num_lives = 5
     game = Hangman(word_list, num_lives=5)
     while True:
-        if num_lives == 0:
+        if game.num_lives == 0:
             print("You lost!")
-        elif num_lives > 0 and game.num_letters > 0:
+        elif game.num_lives > 0 and game.num_letters > 0:
             game.ask_for_input()
-        elif num_lives > 0 and game.num_letters == 0:
+        elif game.num_lives > 0 and game.num_letters == 0:
             print("Congratulations, you won the game!")
 
+# FIXME: while loop in play_game function does not work. Lives go to negative numbers
 
 
 if __name__ == '__main__':
