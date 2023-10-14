@@ -12,7 +12,7 @@ class Hangman:
         self.list_of_guesses = []
 
 
-    def check_guess(self, guess) -> None:
+    def check_letter_guess(self, guess) -> None:
         guess = guess.lower()
         if guess in self.word:
             print(f"Good guess!The letter '{guess}' is in the word.")
@@ -26,9 +26,7 @@ class Hangman:
                         self.word_guessed[each_index] = letter
 
             print(f"State of word guess: {self.word_guessed}")
-            print(f"All letter indexes: {all_letter_indexes}")
 
-                    
         else:
             self.num_lives -= 1
             print(f"Sorry, {guess} is not in the word. Try again.")
@@ -43,27 +41,68 @@ class Hangman:
             elif guess in self.list_of_guesses:
                 print("You already tried that letter!")
             else:
-                self.check_guess(guess)
+                self.check_letter_guess(guess)
                 self.list_of_guesses.append(guess)
                 break
-        
+
+
+    def guess_word(self):
+        while True:
+            guess_type_choice = input("Would you like to guess the full word? Enter 'yes' or 'no':  ")
+            if guess_type_choice == 'yes':
+                full_word_guess = input("Guess the word: ")
+                if full_word_guess == self.word:
+                    self.num_letters = 0
+                    break
+                else:
+                    self.num_lives -= 1
+                    print(f"Sorry, {full_word_guess} is not the word. Try again.")
+                    print(f"You have {self.num_lives} lives left.")
+                    break
+
+            elif guess_type_choice == 'no':
+                self.ask_for_input()
+                break
+
+            else:
+                print("Invalid input. Please enter 'yes' or 'no'.")
+
+                
+
 
 def play_game(word_list):
-    game = Hangman(word_list, num_lives=5)
+    ''' 
+    HANGMAN GAME: PLAYER INSTRUCTIONS
 
-    # Debugging checks:
-    print(f"The word to be guessed is: {game.word}")
-    print(f"the number of unique letters is: {game.num_letters}")
-    print(game.word_guessed)
+        In each round:
+        - First, you will be asked if you want an attempt at guessing the full word.
+        - Enter 'yes' if you think you know the word. Afterwards, enter the word.
+        - If you don't know the word yet, enter 'no'. Then, you will have a chance 
+          to guess a letter in the word.
+          
+        In each round, the game will show you:
+         - The number of lives you have left
+         - Your progress at guessing the word 
+         
+         
+         LET'S PLAY!!!!!
+         
+         
+         '''
+    
+    print(play_game.__doc__)
+
+    game = Hangman(word_list, num_lives=5)
+    print(f"The word to be guessed is: {game.word_guessed}")
     
     while True:
         if game.num_lives == 0:
-            print("You lost!")
+            print(f"You lost! The word is '{game.word}'")
             break
         elif game.num_letters > 0:
-            game.ask_for_input()
+            game.guess_word()
         elif game.num_lives > 0 and game.num_letters == 0:
-            print("Congratulations, you won the game!")
+            print(f"Congratulations, you won the game! The word is '{game.word}'")
             break
 
 
