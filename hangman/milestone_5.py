@@ -3,6 +3,44 @@ import random
 
 
 class Hangman:
+
+    #TODO: ammend docstrings to reflect the names of my methods
+    '''
+    A Hangman Game that asks the user for a letter and checks if it is in the word.
+    It starts with a default number of lives and a random word from the word_list.
+
+    
+    Parameters:
+    ----------
+    word_list: list
+        List of words to be used in the game
+    num_lives: int
+        Number of lives the player has
+    
+    Attributes:
+    ----------
+    word: str
+        The word to be guessed picked randomly from the word_list
+    word_guessed: list
+        A list of the letters of the word, with '_' for each letter not yet guessed
+        For example, if the word is 'apple', the word_guessed list would be ['_', '_', '_', '_', '_']
+        If the player guesses 'a', the list would be ['a', '_', '_', '_', '_']
+    num_letters: int
+        The number of UNIQUE letters in the word that have not been guessed yet
+    num_lives: int
+        The number of lives the player has
+    list_letters: list
+        A list of the letters that have already been tried
+
+    Methods:
+    -------
+    check_letter(letter)
+        Checks if the letter is in the word.
+    ask_letter()
+        Asks the user for a letter.
+    '''
+
+
     def __init__(self, word_list, num_lives = 5):
         self.word = random.choice(word_list)
         self.word_guessed = len(self.word) * ['_'] 
@@ -73,13 +111,13 @@ class Hangman:
 def play_game(word_list):
     ''' 
     HANGMAN GAME: PLAYER INSTRUCTIONS
-
+    ---------------------------------
         In each round:
         - First, you will be asked if you want an attempt at guessing the full word.
         - Enter 'yes' if you think you know the word. Afterwards, enter the word.
         - If you don't know the word yet, enter 'no'. Then, you will have a chance 
           to guess a letter in the word.
-          
+
         In each round, the game will show you:
          - The number of lives you have left
          - Your progress at guessing the word 
@@ -89,9 +127,6 @@ def play_game(word_list):
          
          
          '''
-    
-    print(play_game.__doc__)
-
     game = Hangman(word_list, num_lives=5)
     print(f"The word to be guessed is: {game.word_guessed}")
     
@@ -110,6 +145,12 @@ def play_game(word_list):
 
 if __name__ == '__main__':
     word_list_1 = ["banana", "nectarine", "mango", "plum", "apple"]
+    print(play_game.__doc__)
     play_game(word_list_1)
 
+
+# TODO: add error handling when inputting incorrect parameters to play_game
+# TODO: add comments throughout
+# TODO: add docstrings to the class. Ammend current docstrings
+# TODO: update README file
 
