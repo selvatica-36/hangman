@@ -2,6 +2,7 @@
 import random
 
 
+
 class Hangman:
 
     #TODO: ammend docstrings to reflect the names of my methods
@@ -40,9 +41,17 @@ class Hangman:
         Asks the user for a letter.
     '''
 
-
-    def __init__(self, word_list, num_lives = 5):
-        self.word = random.choice(word_list)
+    def __init__(self, word_list, num_lives=5):
+        if type(word_list) != list:
+            raise TypeError("Parameter word_list must be a list.") # This works
+        elif type(word_list) == list:
+            for element in word_list:
+                if type(element) != str:
+                    raise TypeError("Parameter word_list must be a list containing one or more words as strings.")
+        if type(num_lives) != int:
+            raise TypeError("Parameter 'num_lives' must be an integer.")
+        
+        self.word = random.choice(word_list).lower()
         self.word_guessed = len(self.word) * ['_'] 
         self.num_letters = len(set(self.word))
         self.word_list = word_list
@@ -94,7 +103,7 @@ class Hangman:
                     break
                 else:
                     self.num_lives -= 1
-                    print(f"Sorry, {full_word_guess} is not the word. Try again.")
+                    print(f"Sorry, '{full_word_guess}' is not the word. Try again.")
                     print(f"You have {self.num_lives} lives left.")
                     break
 
@@ -105,7 +114,6 @@ class Hangman:
             else:
                 print("Invalid input. Please enter 'yes' or 'no'.")
 
-                
 
 
 def play_game(word_list):
@@ -127,30 +135,35 @@ def play_game(word_list):
          
          
          '''
-    game = Hangman(word_list, num_lives=5)
-    print(f"The word to be guessed is: {game.word_guessed}")
     
-    while True:
-        if game.num_lives == 0:
-            print(f"You lost! The word is '{game.word}'")
-            break
-        elif game.num_letters > 0:
-            game.guess_word()
-        elif game.num_lives > 0 and game.num_letters == 0:
-            print(f"Congratulations, you won the game! The word is '{game.word}'")
-            break
+    num_lives = 5
+    try:
+        game = Hangman(word_list, num_lives)
+        print(f"The word to be guessed is: {game.word_guessed}")  
+        while True:
+            if game.num_lives == 0:
+                print(f"You lost! The word is '{game.word}'")
+                break
+            elif game.num_letters > 0:
+                game.guess_word()
+            elif game.num_lives > 0 and game.num_letters == 0:
+                print(f"Congratulations, you won the game! The word is '{game.word}'")
+                break
 
+    except TypeError as e:
+        print(f"Error: {e}")
 
-
-
+    
+    
 if __name__ == '__main__':
-    word_list_1 = ["banana", "nectarine", "mango", "plum", "apple"]
+    word_list = ["banana", "nectarine", "mango", "plum", "apple"]
     print(play_game.__doc__)
-    play_game(word_list_1)
+    play_game(word_list)
 
 
 # TODO: add error handling when inputting incorrect parameters to play_game
 # TODO: add comments throughout
 # TODO: add docstrings to the class. Ammend current docstrings
 # TODO: update README file
+# ValueError("Parameter word_list must be a list containing one or more words as strings")
 
