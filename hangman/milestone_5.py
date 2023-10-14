@@ -2,7 +2,6 @@
 import random
 
 
-
 class Hangman:
 
     #TODO: ammend docstrings to reflect the names of my methods
@@ -14,7 +13,7 @@ class Hangman:
     Parameters:
     ----------
     word_list: list
-        List of words to be used in the game
+        List of words to be used in the game. Words must be formatted as strings
     num_lives: int
         Number of lives the player has
     
@@ -30,18 +29,19 @@ class Hangman:
         The number of UNIQUE letters in the word that have not been guessed yet
     num_lives: int
         The number of lives the player has
-    list_letters: list
+    list_of_guesses: list
         A list of the letters that have already been tried
 
     Methods:
     -------
-    check_letter(letter)
-        Checks if the letter is in the word.
-    ask_letter()
+    check_letter_guess(guess)
+        Checks if the letter guessed is in the word.
+    ask_letter_input()
         Asks the user for a letter.
+    guess(word)
     '''
 
-    def __init__(self, word_list, num_lives=5):
+    def __init__(self, word_list, num_lives = 5):
         if type(word_list) != list:
             raise TypeError("Parameter word_list must be a list.") # This works
         elif type(word_list) == list:
@@ -56,63 +56,78 @@ class Hangman:
         self.num_letters = len(set(self.word))
         self.word_list = word_list
         self.num_lives = num_lives
-        self.list_of_guesses = []
+        self.list_of_letter_guesses = []
+        self.list_of_word_guesses = []
 
 
-    def check_letter_guess(self, guess) -> None:
-        guess = guess.lower()
-        if guess in self.word:
-            print(f"Good guess!The letter '{guess}' is in the word.")
+    def check_letter_guess(self, letter_guess) -> None:
+        letter_guess = letter_guess.lower()
+        if letter_guess in self.word:
+            print(f"Good guess!The letter '{letter_guess}' is in the word.")
             self.num_letters -= 1
             print(f"Number of unique letters left: {self.num_letters}")
 
             for letter in self.word:
-                if letter == guess: 
+                if letter == letter_guess: 
                     all_letter_indexes = [position for position, char in enumerate(self.word) if char == letter]
                     for each_index in all_letter_indexes:
                         self.word_guessed[each_index] = letter
 
-            print(f"State of word guess: {self.word_guessed}")
+            print(f"The word you need to guess is: {self.word_guessed}")
 
         else:
             self.num_lives -= 1
-            print(f"Sorry, {guess} is not in the word. Try again.")
+            print(f"Sorry, {letter_guess} is not in the word. Try again.")
             print(f"You have {self.num_lives} lives left.")
 
     
-    def ask_for_input(self):
+    def ask_letter_input(self):
         while True:
-            guess = input("Please, guess a letter: ")
-            if len(guess) != 1 or guess.isalpha() == False:
+            letter_guess = input("Please, guess a letter: ")
+            if len(letter_guess) != 1 or letter_guess.isalpha() == False:
                 print("Invalid letter. Please, enter a single alphabetical character.")
-            elif guess in self.list_of_guesses:
+            elif letter_guess in self.list_of_letter_guesses:
                 print("You already tried that letter!")
             else:
-                self.check_letter_guess(guess)
-                self.list_of_guesses.append(guess)
+                self.check_letter_guess(letter_guess)
+                self.list_of_letter_guesses.append(letter_guess)
                 break
 
 
-    def guess_word(self):
+    def check_word_guess(self, word_guess) -> None:
+        if word_guess == self.word:
+            self.num_letters = 0
+        else:
+            self.num_lives -= 1
+            print(f"Sorry, '{word_guess}' is not the word. Try again.")
+            print(f"You have {self.num_lives} lives left.")
+    
+
+    def ask_word_guess(self):
         while True:
-            guess_type_choice = input("Would you like to guess the full word? Enter 'yes' or 'no':  ")
-            if guess_type_choice == 'yes':
-                full_word_guess = input("Guess the word: ")
-                if full_word_guess == self.word:
-                    self.num_letters = 0
-                    break
-                else:
-                    self.num_lives -= 1
-                    print(f"Sorry, '{full_word_guess}' is not the word. Try again.")
-                    print(f"You have {self.num_lives} lives left.")
-                    break
-
-            elif guess_type_choice == 'no':
-                self.ask_for_input()
+            word_guess = input("Guess the word: ")
+            if word_guess.isalpha() == False:
+                print("Invalid word. Please, enter a word that only contains alphabetical characters.")
+            elif word_guess in self.list_of_word_guesses:
+                print("You already tried that word!")
+            else:
+                self.check_word_guess(word_guess)
+                self.list_of_word_guesses.append(word_guess)
                 break
 
+
+    def type_of_guess(self):
+        while True:
+            guess_type = input("Would you like to guess the full word? Enter 'yes' or 'no':  ")
+            if guess_type == 'yes':
+                self.ask_word_guess()
+                break
+            elif guess_type == 'no':
+                self.ask_letter_input()
+                break
             else:
                 print("Invalid input. Please enter 'yes' or 'no'.")
+
 
 
 
@@ -145,7 +160,7 @@ def play_game(word_list):
                 print(f"You lost! The word is '{game.word}'")
                 break
             elif game.num_letters > 0:
-                game.guess_word()
+                game.type_of_guess()
             elif game.num_lives > 0 and game.num_letters == 0:
                 print(f"Congratulations, you won the game! The word is '{game.word}'")
                 break
@@ -156,14 +171,14 @@ def play_game(word_list):
     
     
 if __name__ == '__main__':
-    word_list = ["banana", "nectarine", "mango", "plum", "apple"]
+    word_list = ["Banana", "nectarine", "mango", "plum", "apple"]
     print(play_game.__doc__)
     play_game(word_list)
 
 
-# TODO: add error handling when inputting incorrect parameters to play_game
+
 # TODO: add comments throughout
 # TODO: add docstrings to the class. Ammend current docstrings
 # TODO: update README file
-# ValueError("Parameter word_list must be a list containing one or more words as strings")
+
 
