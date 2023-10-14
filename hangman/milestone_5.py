@@ -21,10 +21,10 @@ class Hangman:
 
             for letter in self.word:
                 if letter == guess: 
-                    all_letter_indexes = [pos for pos, char in enumerate(self.word) if char == letter]
+                    all_letter_indexes = [position for position, char in enumerate(self.word) if char == letter]
                     for each_index in all_letter_indexes:
                         self.word_guessed[each_index] = letter
-                        
+
             print(f"State of word guess: {self.word_guessed}")
             print(f"All letter indexes: {all_letter_indexes}")
 
@@ -45,6 +45,7 @@ class Hangman:
             else:
                 self.check_guess(guess)
                 self.list_of_guesses.append(guess)
+                break
         
 
 def play_game(word_list):
@@ -65,7 +66,7 @@ def play_game(word_list):
             print("Congratulations, you won the game!")
             break
 
-# FIXME: while loop in play_game function does not work. Lives go to negative numbers
+
 
 
 if __name__ == '__main__':
