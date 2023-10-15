@@ -97,7 +97,7 @@ class Hangman:
         print(f"The word you need to guess is: {self.word_guessed}")
         
 
-    def check_letter_guess(self, letter_guess) -> None:
+    def _check_letter_guess(self, letter_guess) -> None:
         '''Checks if the letter guessed is in the word.
             Args:
                 letter_guess(str): letter guessed by user 
@@ -126,12 +126,12 @@ class Hangman:
             elif letter_guess in self.list_of_letter_guesses:
                 print("You already tried that letter!")
             else:
-                self.check_letter_guess(letter_guess)
+                self._check_letter_guess(letter_guess)
                 self.list_of_letter_guesses.append(letter_guess)
                 break
 
 
-    def check_word_guess(self, word_guess) -> None:
+    def _check_word_guess(self, word_guess) -> None:
         '''Checks if the word guessed is the word.
            Args:
                 word_guess (str): word guessed by user 
@@ -153,7 +153,7 @@ class Hangman:
             elif word_guess in self.list_of_word_guesses:
                 print("You already tried that word!")
             else:
-                self.check_word_guess(word_guess)
+                self._check_word_guess(word_guess)
                 self.list_of_word_guesses.append(word_guess)
                 break
 
