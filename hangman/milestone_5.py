@@ -40,9 +40,9 @@ class Hangman:
         Asks the user whether they want to guess the full word or a letter.
     ask_word_guess()
         Asks the user for a word.
-    check_word_guess(word_guess)
+    _check_word_guess(word_guess)
         Checks if the word guessed is the word. 
-    check_letter_guess(letter_guess)
+    _check_letter_guess(letter_guess)
         Checks if the letter guessed is in the word.
     ask_letter_input()
         Asks the user for a letter.
