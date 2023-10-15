@@ -4,9 +4,9 @@ import random
 
 class Hangman:
 
-    #TODO: ammend docstrings to reflect the names of my methods
     '''
     A Hangman Game that asks the user for a letter and checks if it is in the word.
+    It also gives the user a chance to guess the whole word at once.
     It starts with a default number of lives and a random word from the word_list.
 
     
@@ -29,19 +29,36 @@ class Hangman:
         The number of UNIQUE letters in the word that have not been guessed yet
     num_lives: int
         The number of lives the player has
-    list_of_guesses: list
+    list_of_letter_guesses: list
         A list of the letters that have already been tried
+    list_of_word_guesses: list
+        A list of the words that have already been tried
 
     Methods:
     -------
-    check_letter_guess(guess)
+    type_of_guess()
+        Asks the user whether they want to guess the full word or a letter.
+    ask_word_guess()
+        Asks the user for a word.
+    check_word_guess(word_guess)
+        Checks if the word guessed is the word. 
+    check_letter_guess(letter_guess)
         Checks if the letter guessed is in the word.
     ask_letter_input()
         Asks the user for a letter.
-    guess(word)
+    _fill_word_with_guess(letter_guess)
+        Protected method used by check_letter_guess method only if the letter guessed by the user is correct.
+        Takes the letter guessed and fills the blank spaces in the word to be guessed.
+
     '''
 
     def __init__(self, word_list, num_lives = 5):
+        ''' Constructor of the Hangman class
+            Takes in word_list and a default number of lives num_lives as parameters.
+            Sets the attributes of the class
+            Adds error handling to for a user-friendly experience, to avoid TypeErrors
+        '''
+        # Error handling: makes sure parameters are the correct data type and raises an error otherwise
         if type(word_list) != list:
             raise TypeError("Parameter word_list must be a list.") # This works
         elif type(word_list) == list:
@@ -51,6 +68,7 @@ class Hangman:
         if type(num_lives) != int:
             raise TypeError("Parameter 'num_lives' must be an integer.")
         
+        # Setting the attributes of the class:
         self.word = random.choice(word_list).lower()
         self.word_guessed = len(self.word) * ['_'] 
         self.num_letters = len(set(self.word))
@@ -60,21 +78,39 @@ class Hangman:
         self.list_of_word_guesses = []
 
 
+    def _fill_word_with_guess(self, letter_guess):
+        ''' Protected method used by check_letter_guess method 
+            only if the letter guessed by the user is correct.
+            Takes the letter guessed and fills the blank spaces in the word to be guessed.
+            Args:
+                letter_guess(str): letter guessed by user
+        '''
+        for letter in self.word:
+            if letter == letter_guess:
+                # For a letter that appears multiple times inside a word, 
+                # we need to create a list of the indexes of this letter in the word: all_letter_indexes 
+                all_letter_indexes = [position for position, char in enumerate(self.word) if char == letter]
+                # Iterate over the list of indexes
+                for each_index in all_letter_indexes:
+                    # Substitute correct letter in their right position (index)
+                    self.word_guessed[each_index] = letter
+        print(f"The word you need to guess is: {self.word_guessed}")
+        
+
     def check_letter_guess(self, letter_guess) -> None:
+        '''Checks if the letter guessed is in the word.
+            Args:
+                letter_guess(str): letter guessed by user 
+        '''
         letter_guess = letter_guess.lower()
         if letter_guess in self.word:
             print(f"Good guess!The letter '{letter_guess}' is in the word.")
             self.num_letters -= 1
+            self._fill_word_with_guess(letter_guess)
+
+            # Debugging check - should not be shown to user
             print(f"Number of unique letters left: {self.num_letters}")
-
-            for letter in self.word:
-                if letter == letter_guess: 
-                    all_letter_indexes = [position for position, char in enumerate(self.word) if char == letter]
-                    for each_index in all_letter_indexes:
-                        self.word_guessed[each_index] = letter
-
-            print(f"The word you need to guess is: {self.word_guessed}")
-
+            
         else:
             self.num_lives -= 1
             print(f"Sorry, {letter_guess} is not in the word. Try again.")
@@ -82,6 +118,7 @@ class Hangman:
 
     
     def ask_letter_input(self):
+        '''Asks the user for a letter.'''
         while True:
             letter_guess = input("Please, guess a letter: ")
             if len(letter_guess) != 1 or letter_guess.isalpha() == False:
@@ -95,6 +132,10 @@ class Hangman:
 
 
     def check_word_guess(self, word_guess) -> None:
+        '''Checks if the word guessed is the word.
+           Args:
+                word_guess (str): word guessed by user 
+        '''
         if word_guess == self.word:
             self.num_letters = 0
         else:
@@ -104,6 +145,7 @@ class Hangman:
     
 
     def ask_word_guess(self):
+        ''' Asks the user for a word.'''
         while True:
             word_guess = input("Guess the word: ")
             if word_guess.isalpha() == False:
@@ -117,6 +159,7 @@ class Hangman:
 
 
     def type_of_guess(self):
+        '''Asks the user whether they want to guess the full word or a letter.'''
         while True:
             guess_type = input("Would you like to guess the full word? Enter 'yes' or 'no':  ")
             if guess_type == 'yes':
@@ -133,6 +176,15 @@ class Hangman:
 
 def play_game(word_list):
     ''' 
+    Implementation of the Hangman game (see Hangman class).
+    For more information run help(Hangman) or print(Hangman.__doc__)
+    
+    Parameters:
+    ----------
+    word_list: list
+        List of words to be used in the game. Words must be formatted as strings.
+
+
     HANGMAN GAME: PLAYER INSTRUCTIONS
     ---------------------------------
         In each round:
@@ -151,7 +203,9 @@ def play_game(word_list):
          
          '''
     
+
     num_lives = 5
+
     try:
         game = Hangman(word_list, num_lives)
         print(f"The word to be guessed is: {game.word_guessed}")  
@@ -164,7 +218,8 @@ def play_game(word_list):
             elif game.num_lives > 0 and game.num_letters == 0:
                 print(f"Congratulations, you won the game! The word is '{game.word}'")
                 break
-
+    
+    # Throw error message if the try block encounter a TypeError
     except TypeError as e:
         print(f"Error: {e}")
 
@@ -174,11 +229,3 @@ if __name__ == '__main__':
     word_list = ["Banana", "nectarine", "mango", "plum", "apple"]
     print(play_game.__doc__)
     play_game(word_list)
-
-
-
-# TODO: add comments throughout
-# TODO: add docstrings to the class. Ammend current docstrings
-# TODO: update README file
-
-
